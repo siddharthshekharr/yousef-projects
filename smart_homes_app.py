@@ -67,6 +67,21 @@ class SmartHomesApp:
             command=self._add_smart_home
         ).pack(side=tk.LEFT, padx=5)
         
+        # Add Save and Load buttons
+        ttk.Button(
+            control_frame, 
+            text="Save Homes", 
+            width=15,
+            command=self._save_smart_homes
+        ).pack(side=tk.LEFT, padx=5)
+        
+        ttk.Button(
+            control_frame, 
+            text="Load Homes", 
+            width=15,
+            command=self._load_smart_homes_and_update
+        ).pack(side=tk.LEFT, padx=5)
+        
         # Create a frame for the smart homes list
         self.homes_frame = ttk.LabelFrame(main_frame, text="Smart Homes", padding="10")
         self.homes_frame.pack(fill=tk.BOTH, expand=True, pady=10)
@@ -317,8 +332,10 @@ class SmartHomesApp:
                             pass
             
             print("Smart homes saved successfully.")
+            messagebox.showinfo("Success", "Smart homes saved successfully.")
         except Exception as e:
             print(f"Error saving smart homes: {str(e)}")
+            messagebox.showerror("Error", f"Failed to save smart homes: {str(e)}")
     
     def _load_smart_homes(self):
         """Load smart homes from a CSV file."""
@@ -375,6 +392,26 @@ class SmartHomesApp:
             print(f"Error loading smart homes: {str(e)}")
             # If there's an error, start with an empty list
             self.smart_homes = []
+            
+    def _load_smart_homes_and_update(self):
+        """Load smart homes from a CSV file and update the display."""
+        try:
+            # Clear existing smart homes
+            self.smart_homes = []
+            
+            # Load smart homes from file
+            self._load_smart_homes()
+            
+            # Update the display
+            self._update_smart_homes_display()
+            
+            if self.smart_homes:
+                messagebox.showinfo("Success", "Smart homes loaded successfully.")
+            else:
+                messagebox.showinfo("Information", "No saved smart homes found.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to load smart homes: {str(e)}")
+
 
 def test_smart_homes_system():
     """
@@ -387,4 +424,5 @@ def test_smart_homes_system():
     root.mainloop()
 
 if __name__ == "__main__":
-    test_smart_homes_system() 
+    test_smart_homes_system()
+
